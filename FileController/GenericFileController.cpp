@@ -29,8 +29,21 @@ GenericFileController::~GenericFileController() {
 }
 
 void GenericFileController::load() {
+	/*
 	for ( unsigned int i = 0; i < data_vec.size(); i++ ) {
 		data_vec.at(i)->read(m_Tree);
+	}
+	*/
+	std::vector<double> x_vec;
+	x_vec.resize( data_vec.size() );
+	for ( unsigned int i = 0; i < data_vec.size(); i++ ) {
+		m_Tree->SetBranchAddress( data_vec.at(i)->getName().c_str(), &x_vec.at(i));
+	}
+	for ( unsigned int i = 0; i < m_Tree->GetEntries(); i++ ) {
+		m_Tree->GetEntry(i);
+		for ( unsigned int k = 0; k < data_vec.size(); k++ ) {
+			data_vec.at(k)->addValue(x_vec.at(k));
+		}
 	}
 }
 
@@ -41,6 +54,31 @@ void GenericFileController::save(TTree* toTree) {
 		cout << "... saving " << data_vec.at(i)->getName() << endl;
 		data_vec.at(i)->write(toTree, vec_length, toTree->GetEntries() == 0);
 	}
+	/*
+	int vec_length = getMinVecSize();
+	if ( toTree == 0 ) toTree = m_Tree;
+
+	std::vector<double> x_vec;
+	x_vec.resize( data_vec.size() );
+
+	if ( toTree->GetEntries() == 0 ) {
+		for ( unsigned int i = 0; i < data_vec.size(); i++ ) {
+			toTree->Branch( data_vec.at(i)->getName().c_str(), &x_vec.at(i), (data_vec.at(i)->getName()+"/D").c_str() );
+		}
+		for ( unsigned int i = 0; i < vec_length; i++ ) {
+			for ( unsigned int k = 0; k < data_vec.size(); k++ ) {
+				x_vec.at(k) = data_vec.at(k)->getValue(i);
+			}
+			toTree->Fill();
+		}
+		toTree->Write("", TObject::kOverwrite);
+	} else {
+		for ( unsigned int i = 0; i < data_vec.size(); i++ ) {
+			cout << "... saving " << data_vec.at(i)->getName() << endl;
+			data_vec.at(i)->write(toTree, vec_length, false);
+		}
+	}
+	*/
 }
 
 int GenericFileController::getMinVecSize() {

@@ -31,8 +31,6 @@ private:
 
 	double DISTANCE_CUTOFF;
 
-	TFile *m_File;
-	TTree *m_Tree;
 	IndicatorFileController* m_indFC;
 	MLPFileController* m_mlpFC;
 

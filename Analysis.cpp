@@ -103,16 +103,9 @@ int main(int argc, char** argv) {
 	bool calculate = false;
 	InputFileController JForexData(fixedPath+"JForex.root", "JForex", calculate, jForexFile);
 	IndicatorFileController Indicators(fixedPath+"Indicators.root", "Indicators", calculate, &JForexData);
-	calculate = true;
 	MLPFileController MLP(fixedPath+"MLP.root", "MLP", calculate, trainNN, fixedPath, &Indicators);
 
-	usleep(100000);
 	SubSpaces subSpace(fixedPath+"SubSpace.root", "SubSpace", &Indicators, &MLP);
-	subSpace.getDistances();
-	subSpace.applyFilter();
-
-	return 0;
-
 	calculate = true;
 	trainNN = true;
 	MLPFileController MLPFilter(fixedPath+"MLPFilter.root", "MLPFilter", calculate, trainNN, fixedPath, &subSpace);

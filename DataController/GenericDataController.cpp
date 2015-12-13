@@ -15,7 +15,7 @@ GenericDataController::GenericDataController(string branchName) {
 	m_branchName = branchName;
 	m_className = "GenericDataContoller";
 	histNeeded = 0;
-	m_calcIncrement = 10;
+	m_calcIncrement = 200;
 }
 
 GenericDataController::~GenericDataController() {
@@ -35,7 +35,7 @@ void GenericDataController::write(TTree* t, int length, bool first) {
 		}
 		t->Write("", TObject::kOverwrite);
 	} else {
-		TBranch *b = t->Branch( m_branchName.c_str(), &x, (m_branchName+"/D").c_str() );
+		TBranch* b = t->Branch( m_branchName.c_str(), &x, (m_branchName+"/D").c_str() );
 		for ( unsigned int i = 0; i < length; i++ ) {
 			t->GetEntry(i);
 			x = m_vec.at(i);

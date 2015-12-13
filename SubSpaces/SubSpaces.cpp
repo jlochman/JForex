@@ -26,15 +26,12 @@ SubSpaces::SubSpaces(string fileName, string treeName, IndicatorFileController* 
 	m_indFC = indFC;
 	m_mlpFC = mlpFC;
 
-	m_File = new TFile(fileName.c_str(), "RECREATE");
-	if ( m_File->GetListOfKeys()->Contains( (treeName).c_str() ) ) {
-		m_Tree = (TTree*) m_File->Get( treeName.c_str() );
-	} else {
-		m_Tree = new TTree(treeName.c_str(), treeName.c_str());
-	}
-
 	DISTANCE_CUTOFF = 0;
+
 	this->getNNInputsOutputs();
+	this->getDistances();
+	this->applyFilter();
+	this->save();
 }
 
 SubSpaces::~SubSpaces() {
@@ -83,31 +80,24 @@ void SubSpaces::applyFilter() {
 		data_vec.push_back( new InputDataController(name_vec.at(i)) );
 	}
 
+	std::cout << "=== applying data cut ===" << std::endl;
+	std::cout << "before cut: " << m_indFC->getMinVecSize() << std::endl;
 	for ( int i = 0; i < m_indFC->getMinVecSize(); i++ ) {
 		for ( int k = 0; k < name_vec.size(); k++ ) {
 			value_vec.at(k) = m_indFC->getValue( name_vec.at(k), i );
 		}
-		if (    m_indFC->getValue( "MACD098_50", i ) < -1.40682e-05 ||
-				(8.71838e-06 < m_indFC->getValue( "MACD098_50", i ) && m_indFC->getValue( "MACD098_50", i ) < 1.41015e-05) ||
-				1.41015e-05 < m_indFC->getValue( "MACD098_50", i ) ||
-				(0.011993 < m_indFC->getValue( "UlcerIndex_50", i ) && m_indFC->getValue( "UlcerIndex_50", i ) < 0.0138404) ||
-				(0.0138404 < m_indFC->getValue( "UlcerIndex_50", i ) && m_indFC->getValue( "UlcerIndex_50", i ) < 0.0163116) ||
-				(0.0163116 < m_indFC->getValue( "UlcerIndex_50", i ) && m_indFC->getValue( "UlcerIndex_50", i ) < 0.020453) ||
-				0.020453 < m_indFC->getValue( "UlcerIndex_50", i ) ||
-				(0.001175 < m_indFC->getValue( "Vol_100", i ) && m_indFC->getValue( "Vol_100", i ) < 0.001265) ||
-				(0.001265 < m_indFC->getValue( "Vol_100", i ) && m_indFC->getValue( "Vol_100", i ) < 0.001425) ||
-				0.001425 < m_indFC->getValue( "Vol_100", i ) ||
-				0.01354 < m_indFC->getValue( "Vol_1000", i ) ||
-				m_indFC->getValue( "change_2000", i ) < -0.00111 ||
-				m_indFC->getValue( "pdAskBid_3000", i ) < -0.001555 ||
-				(0.372754 < m_indFC->getValue( "srAskVolBidVol_20", i ) && m_indFC->getValue( "srAskVolBidVol_20", i ) < 0.476967) ) {
+		if ( m_indFC->getValue( "UlcerIndex_50", i ) < 0.0104734 ) {
+			// do nothing
 		} else {
+			//std::cout << i << " ::: ";
 			for ( int k = 0; k < name_vec.size(); k++ ) {
 				data_vec.at(k)->addValue( value_vec.at(k) );
+			//	std::cout << value_vec.at(k) << " : ";
 			}
+			//std::cout << std::endl;
 		}
 	}
-	this->save();
+	std::cout << "after cut: " << this->getMinVecSize() << std::endl;
 }
 
 void SubSpaces::getNNInputsOutputs() {
