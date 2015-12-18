@@ -14,7 +14,7 @@
 
 #include "MLPDataController.h"
 
-MLPDataController::MLPDataController(string branchName, TTree* in_Tree, string topology, string weight_file, int train_cycles)
+MLPDataController::MLPDataController(std::string branchName, TTree* in_Tree, const std::string topology, const std::string weight_file, int train_cycles)
 	: GenericDataController(branchName) {
 	m_className = "MLP";
 
@@ -22,6 +22,11 @@ MLPDataController::MLPDataController(string branchName, TTree* in_Tree, string t
 	m_topology = topology;
 	m_weightFile = weight_file;
 	NUMBER_OF_TRAIN_CYCLES = train_cycles;
+
+	cout << "=::: preparing TMultiLayerPerceptron " << branchName << endl;
+	cout << "=::: topology: " << topology << endl;
+	cout << "=::: weightFile: " << weight_file << endl;
+	cout << "=::: TTree: " << m_inTree->GetName() << " " << m_inTree->GetEntries() << endl;
 
 	m_MLP = new TMultiLayerPerceptron(m_topology.c_str(), m_inTree);
 
@@ -143,6 +148,8 @@ void MLPDataController::load_Weights() {
 }
 
 void MLPDataController::train_NN() {
+	std::cout << m_MLP->GetName() << std::endl;
+	std::cout << m_MLP->GetStructure() << std::endl;
 	m_MLP->Train( NUMBER_OF_TRAIN_CYCLES, "text,update=1,+" );
 }
 

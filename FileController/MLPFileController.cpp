@@ -32,7 +32,7 @@ MLPFileController::MLPFileController(string fileName, string treeName, bool buil
 		this->save_NN();
 	} else {
 		this->load_NN();
-		this->save_NN();
+		//this->save_NN();
 	}
 
 	if ( build ) {
@@ -87,7 +87,6 @@ void MLPFileController::init() {
 			"cci_100,RSI098_100,Vol_100,MACD098_50,MassIndex098_10,MFI_50,UlcerIndex_50,APO098_20:15:";
 	data_vec.push_back( new MLPDataController("MLPmaxmin1000_200", m_IndicatorFileController->getTree(),
 					in_mlp + "MLPmaxmin1000Out", m_savePath+this->getTree()->GetName()+"maxmin1000_200", cycles) );
-
 }
 
 

@@ -28,6 +28,7 @@ const vector<double>& GenericDataController::getVec() const {
 void GenericDataController::write(TTree* t, int length, bool first) {
 	double x = 0;
 	if ( first ) {
+		std::cout << "== First branch in TTree " << t->GetName() << " : " << m_branchName << std::endl;
 		t->Branch( m_branchName.c_str(), &x, (m_branchName+"/D").c_str() );
 		for ( unsigned int i = 0; i < length; i++ ) {
 			x = m_vec.at(i);
@@ -95,6 +96,11 @@ int GenericDataController::getVecSize() {
 	return m_vec.size();
 }
 
+void GenericDataController::setVecSize(int vec_size) {
+	m_vec.resize( vec_size );
+}
+
 const string& GenericDataController::getClassName() const {
 	return m_className;
 }
+

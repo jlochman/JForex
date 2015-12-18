@@ -19,7 +19,7 @@ GenericFileController::GenericFileController(string fileName, string treeName, b
 		m_Tree = new TTree(treeName.c_str(), treeName.c_str());
 	}
 	// pozor... int je do 2,147,483,647
-	MAX_VEC_LENGTH = (int) 2e9;
+	MAX_VEC_LENGTH = (int) 1e9;
 
 	if ( build ) cout << "[BUILD] ";
 	else cout << "[LOAD]  ";
@@ -29,29 +29,32 @@ GenericFileController::~GenericFileController() {
 }
 
 void GenericFileController::load() {
-	/*
 	for ( unsigned int i = 0; i < data_vec.size(); i++ ) {
+		cout << "... loading [" << i+1 << "/" << data_vec.size() << "] " << data_vec.at(i)->getName() << endl;
 		data_vec.at(i)->read(m_Tree);
 	}
-	*/
+/*
 	std::vector<double> x_vec;
 	x_vec.resize( data_vec.size() );
 	for ( unsigned int i = 0; i < data_vec.size(); i++ ) {
 		m_Tree->SetBranchAddress( data_vec.at(i)->getName().c_str(), &x_vec.at(i));
+		data_vec.at(i)->setVecSize( (int) m_Tree->GetEntries() );
 	}
 	for ( unsigned int i = 0; i < m_Tree->GetEntries(); i++ ) {
 		m_Tree->GetEntry(i);
 		for ( unsigned int k = 0; k < data_vec.size(); k++ ) {
-			data_vec.at(k)->addValue(x_vec.at(k));
+			//data_vec.at(k)->addValue( x_vec.at(k));
+			data_vec.at(k)->setValue(i, x_vec.at(k));
 		}
 	}
+*/
 }
 
 void GenericFileController::save(TTree* toTree) {
 	int vec_length = getMinVecSize();
 	if ( toTree == 0 ) toTree = m_Tree;
 	for ( unsigned int i = 0; i < data_vec.size(); i++ ) {
-		cout << "... saving " << data_vec.at(i)->getName() << endl;
+		cout << "... saving [" << i+1 << "/" << data_vec.size() << "] " << data_vec.at(i)->getName() << endl;
 		data_vec.at(i)->write(toTree, vec_length, toTree->GetEntries() == 0);
 	}
 	/*

@@ -36,6 +36,7 @@ public:
 	void setVec(const vector<double>& vec);
 	int getHistNeeded() const;
 	int getVecSize();
+	void setVecSize( int vec_size );
 
 	virtual void calculate(int maxCount) = 0;
 

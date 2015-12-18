@@ -7,6 +7,7 @@
 
 #include <vector>
 
+#include "../FileController/InputFileController.h"
 #include "../FileController/IndicatorFileController.h"
 #include "../FileController/MLPFileController.h"
 
@@ -17,7 +18,7 @@ class SubSpaces : public IndicatorFileController {
 
 
 public:
-	SubSpaces(string fileName, string treeName, IndicatorFileController* indFC, MLPFileController* mlpFC);
+	SubSpaces(string fileName, string treeName, bool caculate, IndicatorFileController* indFC, MLPFileController* mlpFC);
 	virtual ~SubSpaces();
 
 	void getDistances();
@@ -25,6 +26,8 @@ public:
 	void test();
 
 private:
+	void init();
+
 	std::vector<double> getBorders(const std::vector<double>* vec, int borderCount);
 	double getDistance(const std::vector<double>* vec, std::string indName, double min, double max);
 	void getNNInputsOutputs();

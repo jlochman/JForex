@@ -18,8 +18,8 @@
 
 #include "SubSpaces.h"
 
-SubSpaces::SubSpaces(string fileName, string treeName, IndicatorFileController* indFC, MLPFileController* mlpFC)
- : IndicatorFileController(fileName, treeName, true, NULL) {
+SubSpaces::SubSpaces(string fileName, string treeName, bool caculate, IndicatorFileController* indFC, MLPFileController* mlpFC)
+ : IndicatorFileController(fileName, treeName, caculate, NULL) {
 
 	std::cout << "[SUB SPACES]" << std::endl;
 	nnInputs_vec.resize(0);
@@ -28,10 +28,26 @@ SubSpaces::SubSpaces(string fileName, string treeName, IndicatorFileController* 
 
 	DISTANCE_CUTOFF = 0;
 
+	this->init();
+	if ( caculate ) {
+		this->getDistances();
+		this->applyFilter();
+		this->save();
+	} else {
+		this->load();
+	}
+
+}
+
+void SubSpaces::init() {
 	this->getNNInputsOutputs();
-	this->getDistances();
-	this->applyFilter();
-	this->save();
+
+	for ( int i = 0; i < nnInputs_vec.size(); i++ ) {
+		data_vec.push_back( new InputDataController(nnInputs_vec.at(i)) );
+	}
+	for ( int i = 0; i < nnOutput_vec.size(); i++ ) {
+		data_vec.push_back( new InputDataController(nnOutput_vec.at(i)) );
+	}
 }
 
 SubSpaces::~SubSpaces() {
@@ -76,9 +92,11 @@ void SubSpaces::applyFilter() {
 	}
 	value_vec.resize( name_vec.size() );
 
+	/*
 	for ( int i = 0; i < name_vec.size(); i++ ) {
 		data_vec.push_back( new InputDataController(name_vec.at(i)) );
 	}
+	*/
 
 	std::cout << "=== applying data cut ===" << std::endl;
 	std::cout << "before cut: " << m_indFC->getMinVecSize() << std::endl;
@@ -86,15 +104,14 @@ void SubSpaces::applyFilter() {
 		for ( int k = 0; k < name_vec.size(); k++ ) {
 			value_vec.at(k) = m_indFC->getValue( name_vec.at(k), i );
 		}
-		if ( m_indFC->getValue( "UlcerIndex_50", i ) < 0.0104734 ) {
+		if ( m_indFC->getValue( "UlcerIndex_50", i ) < 0.0104734 ||
+				m_indFC->getValue( "srAskVolBidVol_1000", i ) > 0.186783 ) {
 			// do nothing
 		} else {
-			//std::cout << i << " ::: ";
 			for ( int k = 0; k < name_vec.size(); k++ ) {
+				// maybe here is the problem - data_vec changes pointer after each value is added
 				data_vec.at(k)->addValue( value_vec.at(k) );
-			//	std::cout << value_vec.at(k) << " : ";
 			}
-			//std::cout << std::endl;
 		}
 	}
 	std::cout << "after cut: " << this->getMinVecSize() << std::endl;
@@ -170,3 +187,5 @@ std::vector<double> SubSpaces::getBorders(const std::vector<double>* vec,
 	}
 	return result;
 }
+
+

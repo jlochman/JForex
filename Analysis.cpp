@@ -57,6 +57,8 @@
 
 #include "StrategySelector/StrategySelector.h"
 
+#include "TMultiLayerPerceptron.h"
+
 using namespace std;
 
 const string fixedPath = "/Users/jlochman/Desktop/JForex/Analysis/";
@@ -105,7 +107,8 @@ int main(int argc, char** argv) {
 	IndicatorFileController Indicators(fixedPath+"Indicators.root", "Indicators", calculate, &JForexData);
 	MLPFileController MLP(fixedPath+"MLP.root", "MLP", calculate, trainNN, fixedPath, &Indicators);
 
-	SubSpaces subSpace(fixedPath+"SubSpace.root", "SubSpace", &Indicators, &MLP);
+	SubSpaces subSpace(fixedPath+"SubSpace.root", "SubSpace", calculate, &Indicators, &MLP);
+	// return 0;
 	calculate = true;
 	trainNN = true;
 	MLPFileController MLPFilter(fixedPath+"MLPFilter.root", "MLPFilter", calculate, trainNN, fixedPath, &subSpace);

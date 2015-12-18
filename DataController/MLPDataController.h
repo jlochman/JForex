@@ -21,7 +21,7 @@ using namespace std;
 
 class MLPDataController: public GenericDataController {
 public:
-	MLPDataController(string branchName, TTree* in_Tree, string topology, string weight_file, int train_cycles = 50);
+	MLPDataController(const std::string branchName, TTree* in_Tree, const std::string topology, const std::string weight_file, int train_cycles = 50);
 	virtual ~MLPDataController();
 	void calculate(int maxCount);
 
@@ -32,6 +32,7 @@ public:
 
 	vector<string> getInputs();
 	string getOutputBranchName();
+
 private:
 	TTree* m_inTree;
 	TMultiLayerPerceptron* m_MLP;

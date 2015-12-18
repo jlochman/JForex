@@ -269,7 +269,7 @@ void IndicatorFileController::coutCorrelation(string MLPname) {
 
 void IndicatorFileController::calculate() {
 	for ( unsigned int i = 0; i < data_vec.size(); i++ ) {
-		cout << data_vec.at(i)->getName() << endl;
+		cout << "... calculating [" << i+1 << "/" << data_vec.size() << "] " << data_vec.at(i)->getName() << endl;
 		data_vec.at(i)->calculate(MAX_VEC_LENGTH);
 	}
 	string indName;
