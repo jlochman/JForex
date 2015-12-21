@@ -61,6 +61,8 @@ IndicatorFileController::IndicatorFileController(string fileName, string treeNam
 		} else {
 			this->load();
 		}
+	} else {
+		m_InputFC = NULL;
 	}
 }
 

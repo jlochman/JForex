@@ -29,6 +29,8 @@ SubSpaces::SubSpaces(string fileName, string treeName, bool caculate, IndicatorF
 	DISTANCE_CUTOFF = 0;
 
 	this->init();
+	// if calculate OK
+	// else something bad happens in MLPfilter
 	if ( caculate ) {
 		this->getDistances();
 		this->applyFilter();

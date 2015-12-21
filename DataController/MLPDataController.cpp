@@ -26,12 +26,16 @@ MLPDataController::MLPDataController(std::string branchName, TTree* in_Tree, con
 	cout << "=::: preparing TMultiLayerPerceptron " << branchName << endl;
 	cout << "=::: topology: " << topology << endl;
 	cout << "=::: weightFile: " << weight_file << endl;
-	cout << "=::: TTree: " << m_inTree->GetName() << " " << m_inTree->GetEntries() << endl;
+	cout << "=::: TTree: " << m_inTree->GetName() << "; entries: " << m_inTree->GetEntries() << endl;
 
-	m_MLP = new TMultiLayerPerceptron(m_topology.c_str(), m_inTree);
+	m_MLP = new TMultiLayerPerceptron(m_topology.c_str(), m_inTree, "Entry$%2==0", "", TNeuron::kTanh);
 
-	m_inTree->Draw((">>"+branchName+"Train").c_str(), "Entry$>=2000 && Entry$ % 2 == 0" );
-	m_inTree->Draw((">>"+branchName+"Test").c_str(), "Entry$>=2000 && Entry$ % 2 == 1");
+	//m_inTree->Draw((">>"+branchName+"Train").c_str(), "Entry$>=2000 && Entry$ % 2 == 0" );
+	//m_inTree->Draw((">>"+branchName+"Test").c_str(), "Entry$>=2000 && Entry$ % 2 == 1");
+
+	m_inTree->Draw((">>"+branchName+"Train").c_str(), "Entry$ % 2 == 0" );
+	m_inTree->Draw((">>"+branchName+"Test").c_str(), "Entry$ % 2 == 1");
+
 	TEventList *elistTrain = (TEventList*)gDirectory->Get((branchName+"Train").c_str());
 	TEventList *elistTest = (TEventList*)gDirectory->Get((branchName+"Test").c_str());
 	m_MLP->SetTrainingDataSet( elistTrain );

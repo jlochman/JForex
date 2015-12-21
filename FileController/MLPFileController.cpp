@@ -32,7 +32,6 @@ MLPFileController::MLPFileController(string fileName, string treeName, bool buil
 		this->save_NN();
 	} else {
 		this->load_NN();
-		//this->save_NN();
 	}
 
 	if ( build ) {
@@ -48,8 +47,8 @@ MLPFileController::~MLPFileController() {
 
 void MLPFileController::init() {
 
-	string in_mlp;
-	int cycles = 20;
+	std::string in_mlp;
+	int cycles = 200;
 
 	cout << "MLP init" << endl;
 	/*
@@ -94,7 +93,7 @@ void MLPFileController::calculate() {
 	cout << "calculation NN output" << endl;
 
 	for ( unsigned int i = 0; i < data_vec.size(); i++ ) {
-		cout << data_vec.at(i)->getName() << endl;
+		cout << "... calculating [" << i+1 << "/" << data_vec.size() << "] " << data_vec.at(i)->getName() << endl;
 		data_vec.at(i)->calculate(MAX_VEC_LENGTH);
 
 		cout << "calculation Corr" << endl;

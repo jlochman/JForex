@@ -85,7 +85,7 @@ void test() {
 	cout << CommodityChannelIndex::getCCI(&my_vec, fromPos, length) << endl;
 	cout << RelativeStrengthIndex::getRSI(&my_vec, fromPos, length, 0.98) << endl;
 	cout << UlcerIndex::getUlicerIndex(&my_vec, fromPos, length) << endl;
-	cout << "MACD: " << MACD::getMACD(&my_vec, fromPos, length, 0.98) << endl;
+	cout << "MACD: " << MACD::getMACD(&my_vec, fromPos, length, 0.98, 0, 0) << endl;
 	cout << AbsolutePriceOscilator::getAPO(&my_vec, fromPos, length, 0.98, 0) << endl;
 	cout << Volatility::getVolatility(&my_vec, fromPos, length) << endl;
 	cout << MassIndex::getMassIndex(&my_vec, fromPos, length, 0.98, 0) << endl;
@@ -104,14 +104,14 @@ int main(int argc, char** argv) {
 	bool trainNN = false;
 	bool calculate = false;
 	InputFileController JForexData(fixedPath+"JForex.root", "JForex", calculate, jForexFile);
+	trainNN = true;
+	calculate = true;
 	IndicatorFileController Indicators(fixedPath+"Indicators.root", "Indicators", calculate, &JForexData);
 	MLPFileController MLP(fixedPath+"MLP.root", "MLP", calculate, trainNN, fixedPath, &Indicators);
 
 	SubSpaces subSpace(fixedPath+"SubSpace.root", "SubSpace", calculate, &Indicators, &MLP);
-	// return 0;
-	calculate = true;
-	trainNN = true;
 	MLPFileController MLPFilter(fixedPath+"MLPFilter.root", "MLPFilter", calculate, trainNN, fixedPath, &subSpace);
+	return 0;
 
 	if ( false ) {
 		//StrategyCloseFileController StratClose(fixedPath+"StratClose.root", "StratClose", calculate, &JForexData, &Indicators, &MLP);

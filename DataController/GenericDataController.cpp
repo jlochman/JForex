@@ -15,7 +15,7 @@ GenericDataController::GenericDataController(string branchName) {
 	m_branchName = branchName;
 	m_className = "GenericDataContoller";
 	histNeeded = 0;
-	m_calcIncrement = 200;
+	m_calcIncrement = 5;
 }
 
 GenericDataController::~GenericDataController() {

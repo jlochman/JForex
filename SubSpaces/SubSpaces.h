@@ -7,7 +7,6 @@
 
 #include <vector>
 
-#include "../FileController/InputFileController.h"
 #include "../FileController/IndicatorFileController.h"
 #include "../FileController/MLPFileController.h"
 
